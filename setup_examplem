@@ -1,0 +1,1 @@
+load('model_id_K14VIMK19_july31.mat'); %A*{1} = DMSO, A*{2} = Tram, A*{3} = BEZ, A*{4} = Comb.
