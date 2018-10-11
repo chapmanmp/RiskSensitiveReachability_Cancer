@@ -16,3 +16,19 @@ T = 6; % number of 12h intervals in 3 days
 Ak = cell(N_AGENT, 1); for d = 1 : N_AGENT, Ak{d} = (A_STAR{d})^T; end 
 % dynamics matrices for [k, k+1) duration of 3 days
 
+xs = 0 : 5 : 1000;                      % Discretized states    [# live cancer cells in population]
+
+ls = 0.95 : -0.1 : 0.05;                % Discretized confidence levels
+
+N = 10;                                 % Time horizon: {0, 1, 2, ..., N} = {0, 3, 6, ..., 30} days
+
+[ X, L ] = meshgrid( xs, ls );
+
+ws = 0.9 : 0.1: 2;                      % ws(i): ith possible value of wk multiplicative modeling error
+
+P = getProbDist( ws, 1.1 );             % P(i): probability that wk = ws(i), choose mean = 1.1 to be slightly de-stabilizing
+
+m = 1;                                  % soft-max parameter
+
+beta = 1;                               % scaling parameter 
+

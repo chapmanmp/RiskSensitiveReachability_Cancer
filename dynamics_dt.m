@@ -19,5 +19,5 @@ xkPLUS1 = zeros(size(xk));
 
 xkPLUS1(1:end-1) = wk * Ak{uk} * xk(1:end-1);  % cell population portion of the state
 
-xkPLUS1(end) = xk(end) + getToxicityProxy(uk); % toxicity at time k+1 due to drug uk applied at time k and previous drugs
+xkPLUS1(end) = xk(end) + getToxicityProxy(uk); % toxicity at time k+1 due to drug uk applied at time k (and previous drugs)
 
