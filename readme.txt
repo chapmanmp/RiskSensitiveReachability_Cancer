@@ -1,1 +1,2 @@
-model_id_K14VIMK19_july31.mat is a local copy from C:\Users\chapmanm\Documents\MATLAB\BiologicalNetworks\Phenotypic State Modeling\Phenotypic_State_Dyn_Library\Results_Summer_2017\model_id
+model_id_K14VIMK19_july31.mat and model_id_K14only_aug6.mat are
+local copies from C:\Users\chapmanm\Documents\MATLAB\BiologicalNetworks\Phenotypic State Modeling\Phenotypic_State_Dyn_Library\Results_Summer_2017\model_id

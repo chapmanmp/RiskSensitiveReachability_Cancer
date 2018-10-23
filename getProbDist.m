@@ -14,7 +14,7 @@ nw = length(ws);
 
 cvx_solver mosek;
 
-cvx_begin
+cvx_begin quiet
 
 variables P(nw,1)
 

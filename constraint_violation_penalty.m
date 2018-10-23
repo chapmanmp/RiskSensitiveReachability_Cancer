@@ -1,20 +1,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DESCRIPTION: Applies penalties to large # live cancer cells & large toxicity magnitude
-% INPUT: State xk, or state trajectory (x0, x1, ..., xN)
-    % state is [# live cells, phenotype 1; ...; # live cells, phenotype last; # dead or dying cells; toxicity]
+% INPUT: x = [ # live cancer cells; toxicity magnitude (proxy) ], 2x1 vector
 % OUTPUT: weighted linear combination of constraint violation penalties
 % AUTHOR: Margaret Chapman
-% DATE: October 11, 2018
+% DATE: October 22, 2018
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function gx = constraint_violation_penalty( x )
 
-Tpop = 200;                                     % tolerable number of live cancer cells
+Tpop = 100;                                     % tolerable number of live cancer cells (small relative to 1000)
 
-xpop = x(1:end-2);                              % portion of the state with live cancer cells
+Ttox = 5;                                       % tolerable toxicity magnitude (2 applications max of combo)
 
-Ttox = 20;                                      % tolerable toxicity magnitude
+gx = x(1)-Tpop + Tpop/Ttox*(x(2)-Ttox);         % one-sided weighted signed distance
 
-xtox = x(end);                                  % portion of the state with toxicity magnitude
+gx = gx/1000;                                   % scale it down to accomomdate large m
 
-gx = sum(xpop)-Tpop + Tpop/Ttox*(xtox-Ttox);    % one-sided weighted signed distance
+% max is about 1.6
