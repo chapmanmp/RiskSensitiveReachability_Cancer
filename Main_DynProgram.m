@@ -20,9 +20,15 @@ mus{N} = cell( N, 1 );          % Optimal policy, mus{N} is \mu_N-1, ..., mus{1}
 Js{N+1} = init_val_func( xs, nx, m, beta, nl ); % Initial value function, JN(x,y) = beta*exp(g(x)) for each y
 
 % Do CVaR-Bellman Recursion
-for k = N: -1: 1,  [ Js{k} , mus{k} ] = CVaR_Bellman_Backup( Js{k+1}, X, L, ws, P, m, dt, A ); display(num2str(k-1)); end
+for k = N: -1: 1 
+    
+    [ Js{k}, mus{k} ] = CVaR_Bellman_Backup( Js{k+1}, xs, nx, x1s, nx1, x2s, ls, nl, ws, nd, us, nu, P, m, beta, ak ); 
+    
+    display(num2str(k-1)); 
 
-% See Results
+end
+
+%% See Results
 for k = N+1: -1: 1
     
     figure(k); FigureSettings; mesh( X1, L, Js{k}(:,1:nx1) ); title('Toxicity proxy, x_2 = 0');

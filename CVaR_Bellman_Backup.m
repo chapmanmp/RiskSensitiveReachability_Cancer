@@ -1,32 +1,38 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DESCRIPTION: Performs the CVaR Bellman backwards recursion, uk \in {0,1}
 % INPUT: 
-    % J_k+1 : optimal cost-to-go at time k+1, array
-    % X : row of states repeated [ xs; xs; ... ], array
-    % L : column of confidence levels repeated [ ls ls ... ], array
-    % ws(i): ith possible value of wk
+    % J_k+1: optimal cost-to-go at time k+1, matrix
+    % xs{i}: ith discrete state
+    % nx: number of discrete states
+    % x1s: x1 grid points, row vector
+    % nx1 = length(x1s)
+    % x2s: x2 grid points, row vector
+    % ls(j): jth discrete confidence level
+    % nl: # confidence levels
+    % ws(i): ith possible value of multiplicative noise wk
+    % nd: # disturbance values
+    % us: set of controls; 1: DMSO, 2: Tram, 3: BEZ, 4: Combo
+    % nu: # controls
     % P(i): probability that wk = ws(i)
-    % m : soft-max parameter for stage_cost_pond.m
-    % dt : duration of [k,k+1) interval
-    % area_pond : approx. surface area of pond
+    % m, beta: parameters for stage_cost.m
+    % ak{d}: net (noise-free) growth rate due to drug d applied at time k
+        % d = 1 (DMSO), d = 2 (Tram), d = 3 (BEZ), d = 4 (Combo)
 % OUTPUT: 
-    % J_k : optimal cost-to-go starting at time k, array
-    % mu_k : optimal controller at time k, array
+    % J_k(j,i): approx. best cost-to-go for sub-problem that starts at time k, state xs{i}, confidence level ls(j)
+    % mu_k(j,i): approx. best drug input at time k, state xs{i}, confidence level ls(j)
 % AUTHOR: Margaret Chapman
-% DATE: September 5, 2018
+% DATE: October 23, 2018
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ J_k, mu_k ] = CVaR_Bellman_Backup( J_kPLUS1, xs, nx, ls, ws, P, m, beta, ak )
+function [ J_k, mu_k ] = CVaR_Bellman_Backup( J_kPLUS1, xs, nx, x1s, nx1, x2s, ls, nl, ws, nd, us, nu, P, m, beta, ak )
 
 J_k = J_kPLUS1; mu_k = J_kPLUS1; % initialization
 
-for i = 1 : nx      % <--x's change along columns of J_k, X, L-->
+for i = 1 : nx      % <--x's change along columns of J_k-->
     
     x = xs{i};
     
-    us = [0; 1];    % possible control actions at state x
-    
-    maxExp_us = maxExp_pond( J_kPLUS1, x, us, xs, ls, ws, P, ak ); 
+    maxExp_us = getMaxExp( J_kPLUS1, x, us, nu, x1s, nx1, x2s, ls, nl, ws, nd, P, ak ); 
     %maxExp_us(i,j) = maxExp, given state x, confidence level ls(i), and control us(j)
     
     %maxExp_u1 = maxExp_pond( J_kPLUS1, x, us(1), xs, ls, ws, P, dt, area_pond ); 
@@ -39,4 +45,6 @@ for i = 1 : nx      % <--x's change along columns of J_k, X, L-->
     
     mu_k(:,i) = us(optInd); % need to check
     
+end
+
 end
