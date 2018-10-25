@@ -27,9 +27,9 @@ end
 us = (1 : N_AGENT)';                    % set of controls; 1: DMSO, 2: Tram, 3: BEZ, 4: Combo
 nu = length(us);
 
-x1s = 0 : 500 : 1000; nx1 = length(x1s);% Discretized x1's    [ # live cancer cells in population ]
+x1s = 0 : 3 : 1000; nx1 = length(x1s);  % Discretized x1's    [ # live cancer cells in population ]
 
-x2s = 0 : 20 : 40; nx2 = length(x2s);   % Discretized x2's    [ toxicity magnitude (proxy) ]
+x2s = 0 : 1 : 40; nx2 = length(x2s);    % Discretized x2's    [ toxicity magnitude (proxy) ]
 
 nx = nx1*nx2;                           % Number discrete states in total
 
@@ -47,12 +47,15 @@ nl = length(ls);
 
 [ X1, L ] = meshgrid( x1s, ls' );       % for plotting at fixed x2
 
-N = 10;                                 % Time horizon: {0, 1, 2, ..., N} = {0, 2, 4, ..., 20} days
+N = 3;                                  % Time horizon: {0, 1, 2, ..., N} = {0, 2, 4, ..., 20} days
 
 ws = [0.5, 1, 2];                       % ws(i): ith possible value of wk multiplicative modeling error
 nd = length(ws);
 
 P = getProbDist( ws, 1.5 );             % P(i): probability that wk = ws(i), choose mean = 1.5 to be de-stabilizing
+
+tick_P = zeros( nd + 1, 1 );            % tick_P = [ 0, P(1), P(1)+P(2), ..., P(1)+...+P(nd-1), 1 ]
+for i = 1 : nd, tick_P(i+1) = tick_P(i) + P(i); end                 
 
 m = 10;                                 % soft-max parameter
 

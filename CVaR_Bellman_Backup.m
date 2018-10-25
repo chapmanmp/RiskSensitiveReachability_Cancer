@@ -43,7 +43,7 @@ for i = 1 : nx      % <--x's change along columns of J_k-->
     
     J_k(:,i) = stage_cost( x, m, beta ) + optExp;
     
-    mu_k(:,i) = us(optInd); % need to check
+    mu_k(:,i) = us(optInd);
     
 end
 
