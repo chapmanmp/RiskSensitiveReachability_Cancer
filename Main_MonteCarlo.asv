@@ -26,7 +26,6 @@ j = 1; alpha = ls(j);                   % fix initial confidence level
 %% Compare values from Dynamic programming vs. Monte Carlo (nt = 100,000)
             % 'dyn_prog_Nis3_oct252018.mat'
 
-% CONCLUSION: values are comparable             
 close all; clearvars; clc; load('dyn_prog_Nis3_oct252018.mat');            
             
 % i = 7438; j = 1; xs{i} = [267; 22]; ls(j) = 0.95;
