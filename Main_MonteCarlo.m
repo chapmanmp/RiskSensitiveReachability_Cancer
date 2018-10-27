@@ -15,9 +15,9 @@ cardU = nu^N;                           % cardU = # possible control sequences
 
 U = getAllControlSeq( us, nu, cardU );  % U{i} = ith possible control sequence of the form (u0, u1, u2)
 
-i = 7438; x = xs{i};                    % fix initial state 
+i = nx; x = xs{i};                      % fix initial state 
  
-j = 1; alpha = ls(j);                   % fix initial confidence level
+j = nl; alpha = ls(j);                  % fix initial confidence level
 
 [ est_J0ji, est_uStar ] = estimateValueByMonteCarlo( x, alpha, U, cardU, ws, nd, tick_P, m, beta, N, ak, x1s, x2s );
 % est_J0ji ~= min_(u0, u1, u2) CVaR_ls(j)[ beta*exp(m*g(x0)) + ... + beta*exp(m*g(x3)) | x0 = xs{i}, (u0, u1, u2) ] 

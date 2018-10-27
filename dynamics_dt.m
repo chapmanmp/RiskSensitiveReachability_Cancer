@@ -2,7 +2,6 @@
 % DESCRIPTION: Defines discrete-time phenotypic-state dynamics
     % duration between k and k+1 is 2 days
     % state is [# live cancer cells; toxicity magnitude (proxy) ]
-    % SNAPS TO GRID ON BOUNDARY
 % INPUT:
     % xk : state at time k, 2x1 vector
     % uk : drug applied at time k, scalar
@@ -26,10 +25,11 @@ xkPLUS1(1) = wk * ak{uk} * xk(1);
 xkPLUS1(2) = xk(2) + getToxicityProxy(uk); 
 % toxicity magnitude (proxy) at time k+1 due to drug uk applied at time k (and previous drugs)
 
-% snap to grid on boundary
-if xkPLUS1(1) > max(x1s), xkPLUS1(1) = max(x1s); end
+% snap to fixed point outside of grid - over long time horizons cost may become too large for numerical stability
+f = 2;
+if xkPLUS1(1) > f*max(x1s), xkPLUS1(1) = f*max(x1s); end
 
-if xkPLUS1(2) > max(x2s), xkPLUS1(2) = max(x2s); end
+if xkPLUS1(2) > f*max(x2s), xkPLUS1(2) = f*max(x2s); end
 
 end
 

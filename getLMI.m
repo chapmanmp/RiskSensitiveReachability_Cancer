@@ -13,6 +13,7 @@
     % J_k+1(j,i): cost-to-go for sub-problem that starts at time k+1, state xs{i}, confidence level ls(j)
     % ak{d}: net (noise-free) growth rate due to drug d applied at time k
         % d = 1 (DMSO), d = 2 (Tram), d = 3 (BEZ), d = 4 (Combo)
+    % BIGVAL: value assigned to J_k+1(x_k+1,y) if xk+1 falls outside grid
 % OUTPUT: A = blkdiag( A1, ..., And ), b = [b1; ...; bnd]
 %             |A1 0  .. 0   |                |b1 |
 %           = |0  ..... 0   |              = |...|
@@ -29,7 +30,7 @@
 % DATE: October 23, 2018
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ A, b ] = getLMI( x, u, ws, nd, x1s, nx1, x2s, ls, nl, J_kPLUS1, ak )
+function [ A, b ] = getLMI( x, u, ws, nd, x1s, nx1, x2s, ls, nl, J_kPLUS1, ak, BIGVAL )
 
 A = []; b_mat = zeros(nl-1,nd); % to contain [b1 b2 ... bnd]
 
@@ -43,11 +44,12 @@ for i = 1 : nd                  % for each disturbance realization
                         % [l_3, l_2] = [0.05, 1/2] 
                         % [l_2, l_1] = [1/2, 0.95]
                           
-        J_jPLUS1 = interp2( x1s, x2s, vec2mat(J_kPLUS1(j+1,:),nx1), x_kPLUS1(1), x_kPLUS1(2), '*linear' ); 
+        J_jPLUS1 = interp2( x1s, x2s, vec2mat(J_kPLUS1(j+1,:),nx1), x_kPLUS1(1), x_kPLUS1(2), '*linear', BIGVAL ); 
         % approximates J_k+1(x_k+1, ls(j+1)) using bilinear interpolation via J_k+1(x_g, ls(j+1)), where x_g \in grid
         % x1s, x2s are (and must be) evenly spaced and monotonic
+        % assigns value BIGVAL if x_kPLUS1(i) is outside of xis
               
-        J_j = interp2( x1s, x2s, vec2mat(J_kPLUS1(j,:),nx1), x_kPLUS1(1), x_kPLUS1(2), '*linear' );
+        J_j = interp2( x1s, x2s, vec2mat(J_kPLUS1(j,:),nx1), x_kPLUS1(1), x_kPLUS1(2), '*linear', BIGVAL );
         % approximates J_k+1(x_k+1, ls(j))
         
         Ai(j) = ( ls(j)*J_j - ls(j+1)*J_jPLUS1 )/( ls(j)-ls(j+1) ); 

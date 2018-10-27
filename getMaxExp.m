@@ -17,19 +17,20 @@
     % P(i): probability that w_k = ws(i)
     % ak{d}: net (noise-free) growth rate due to drug d applied at time k
         % d = 1 (DMSO), d = 2 (Tram), d = 3 (BEZ), d = 4 (Combo)
+    % BIGVAL: value assigned to J_k+1(x_k+1,y) if xk+1 falls outside grid
 % OUTPUT: bigexp(i,j) ~= max_R\inRiskEnvelope { E[ R*J_k+1(x_k+1,ls(i)*R) | x_k, ls(i), us(j) ] }
 % AUTHOR: Margaret Chapman
 % DATE: October 23, 2018
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function bigexp = getMaxExp( J_kPLUS1, x, us, nu, x1s, nx1, x2s, ls, nl, ws, nd, P, ak )
+function bigexp = getMaxExp( J_kPLUS1, x, us, nu, x1s, nx1, x2s, ls, nl, ws, nd, P, ak, BIGVAL )
 
 f_full = zeros(nd,nl); for i = 1:nl, f_full(:,i) = P/ls(i); end; f_full = vec(f_full); f_full = repmat(f_full, nu, 1);
 
 nrows = nl*nd*(nl-1); bus = zeros(nrows,nu); Aus = []; 
 for j = 1 : nu
      % encodes linear interpolation of y*J_k+1( x_k+1, y ) versus y, given us(j) and x
-    [ Au, bu ] = getLMI( x, us(j), ws, nd, x1s, nx1, x2s, ls, nl, J_kPLUS1, ak );
+    [ Au, bu ] = getLMI( x, us(j), ws, nd, x1s, nx1, x2s, ls, nl, J_kPLUS1, ak, BIGVAL );
 
     for i = 1 : nl, Aus = blkdiag(Aus, Au); end
     

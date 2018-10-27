@@ -61,5 +61,6 @@ m = 10;                                 % soft-max parameter
 
 beta = 10^(-3);                         % scaling parameter 
 
-
-
+BIGVAL = N*stage_cost( 2*xs{nx}, m, beta ); % value assigned to J_k+1(x_k+1,y) if x_k+1 falls outside grid
+% I'm not sure if this is the right choice
+% 2 is factor in dynamics_dt.m

@@ -17,6 +17,7 @@
     % m, beta: parameters for stage_cost.m
     % ak{d}: net (noise-free) growth rate due to drug d applied at time k
         % d = 1 (DMSO), d = 2 (Tram), d = 3 (BEZ), d = 4 (Combo)
+    % BIGVAL: value assigned to J_k+1(x_k+1,y) if xk+1 falls outside grid
 % OUTPUT: 
     % J_k(j,i): approx. best cost-to-go for sub-problem that starts at time k, state xs{i}, confidence level ls(j)
     % mu_k(j,i): approx. best drug input at time k, state xs{i}, confidence level ls(j)
@@ -24,7 +25,7 @@
 % DATE: October 23, 2018
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ J_k, mu_k ] = CVaR_Bellman_Backup( J_kPLUS1, xs, nx, x1s, nx1, x2s, ls, nl, ws, nd, us, nu, P, m, beta, ak )
+function [ J_k, mu_k ] = CVaR_Bellman_Backup( J_kPLUS1, xs, nx, x1s, nx1, x2s, ls, nl, ws, nd, us, nu, P, m, beta, ak, BIGVAL )
 
 J_k = J_kPLUS1; mu_k = J_kPLUS1; % initialization
 
@@ -32,7 +33,7 @@ for i = 1 : nx      % <--x's change along columns of J_k-->
     
     x = xs{i};
     
-    maxExp_us = getMaxExp( J_kPLUS1, x, us, nu, x1s, nx1, x2s, ls, nl, ws, nd, P, ak ); 
+    maxExp_us = getMaxExp( J_kPLUS1, x, us, nu, x1s, nx1, x2s, ls, nl, ws, nd, P, ak, BIGVAL ); 
     %maxExp_us(i,j) = maxExp, given state x, confidence level ls(i), and control us(j)
     
     %maxExp_u1 = maxExp_pond( J_kPLUS1, x, us(1), xs, ls, ws, P, dt, area_pond ); 

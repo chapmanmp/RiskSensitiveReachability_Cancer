@@ -7,6 +7,8 @@
 % DATE: October 11, 2018
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% *getLMI.m assumes that x1s and x2s are evenly spaced and monotonic*
+
 close all; clearvars; clc;
 
 setup_example;                  % Provides grid, constraint set, soft-max parameter, probability distribution, horizon, etc.
@@ -22,7 +24,7 @@ Js{N+1} = init_val_func( xs, nx, m, beta, nl ); % Initial value function, JN(x,y
 % Do CVaR-Bellman Recursion
 for k = N: -1: 1 
     
-    [ Js{k}, mus{k} ] = CVaR_Bellman_Backup( Js{k+1}, xs, nx, x1s, nx1, x2s, ls, nl, ws, nd, us, nu, P, m, beta, ak ); 
+    [ Js{k}, mus{k} ] = CVaR_Bellman_Backup( Js{k+1}, xs, nx, x1s, nx1, x2s, ls, nl, ws, nd, us, nu, P, m, beta, ak, BIGVAL ); 
     
     display(num2str(k-1)); 
 
